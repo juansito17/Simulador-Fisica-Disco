@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Integral: Dinámica de Vuelo del Disco</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    
+    <!-- CONFIGURACIÓN MATHJAX -->
+    <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-gray-800">
+
+    <!-- PORTADA -->
+    <header class="bg-slate-900 text-white p-12 shadow-2xl border-b-8 border-blue-500 print:bg-white print:text-black">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-6 tracking-tight leading-tight text-center md:text-left text-white print:text-black">
+                Informe Integral de Análisis Numérico: Modelado Matemático, Simulación Computacional y Optimización de la Dinámica de Vuelo de un Disco
+            </h1>
+            <div class="flex flex-col md:flex-row justify-between items-end border-t border-slate-600 pt-6 mt-6 print:border-black">
+                <div>
+                    <p class="font-bold text-2xl text-cyan-300 mb-1 print:text-black">Juan Manuel Peña Usuga</p>
+                    <p class="text-slate-200 text-sm font-medium print:text-gray-600">Ingeniería Informática (6to Semestre)</p>
+                    <p class="text-slate-400 text-xs print:text-gray-600">Politécnico Colombiano Jaime Isaza Cadavid</p>
+                </div>
+                <div class="mt-4 md:mt-0 text-right text-sm font-mono text-slate-300 print:text-gray-600">
+                    <p>Asignatura: Análisis Numérico 2025-2</p>
+                    <p>Turbo, Antioquia</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-8 bg-white shadow-xl my-10 rounded-xl print:shadow-none print:p-0">
+
+        <!-- 1. INTRODUCCIÓN -->
+        <section>
+            <h2 class="text-3xl font-bold">1. Introducción y Marco Teórico Fundamental</h2>
+            <p>
+                El lanzamiento de disco es un problema clásico de la mecánica que desafía la intuición. A diferencia de un proyectil simple en el vacío (que maximiza su alcance a 45°), un disco es un cuerpo aerodinámico complejo. Su vuelo está gobernado por fuerzas que dependen no solo de su velocidad, sino de su orientación respecto al aire.
+            </p>
+            <p>
+                La introducción de fuerzas aerodinámicas —<strong>sustentación</strong> (lift) y <strong>arrastre</strong> (drag)— transforma el sistema en un conjunto de ecuaciones diferenciales ordinarias (EDO) no lineales acopladas. Estas ecuaciones no tienen una solución analítica simple, por lo que es necesario emplear métodos numéricos avanzados. Este informe despliega una metodología exhaustiva para el tratamiento numérico de este problema utilizando el método de <strong>Runge-Kutta de 4to orden (RK4)</strong>, permitiendo simular con alta precisión la trayectoria bajo diversas condiciones ambientales.
+            </p>
+        </section>
+
+        <!-- 2. FORMULACIÓN MATEMÁTICA -->
+        <section>
+            <h2 class="text-3xl font-bold">2. Formulación Matemática Completa</h2>
+            <p>El movimiento se analiza en un plano bidimensional $(x, y)$ bajo la influencia de la gravedad y las fuerzas aerodinámicas. Estas fuerzas dependen críticamente de la velocidad relativa del disco con respecto al aire y de su ángulo de ataque.</p>
+            
+            <h3>2.1. Ecuaciones Dinámicas de Movimiento (EDOs)</h3>
+            <p>Aplicando la Segunda Ley de Newton ($\sum \vec{F} = m\vec{a}$) en los ejes horizontal y vertical, obtenemos el sistema acoplado:</p>
+            <div class="math-block">
+                $$ \frac{dv_x}{dt} = -\frac{\rho A v_{rel}^2}{2m} (C_d \cos \gamma + C_l \sin \gamma) $$
+                $$ \frac{dv_y}{dt} = -g + \frac{\rho A v_{rel}^2}{2m} (C_l \cos \gamma - C_d \sin \gamma) $$
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4 text-sm">
+                <h4 class="font-bold text-blue-800 mb-2">Leyenda de Variables:</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <li>$\rho$: Densidad del aire ($1.225 \, kg/m^3$)</li>
+                    <li>$A$: Área frontal del disco ($\pi r^2$)</li>
+                    <li>$v_{rel}$: Velocidad relativa al viento</li>
+                    <li>$m$: Masa del disco ($2.0 \, kg$)</li>
+                    <li>$C_d, C_l$: Coeficientes de arrastre y sustentación</li>
+                    <li>$\gamma$: Ángulo de la trayectoria (velocidad)</li>
+                </ul>
+            </div>
+
+            <!-- DESPLEGABLE JUSTIFICACIÓN 1 -->
+            <details open class="print:block group mb-6">
+                <summary class="no-print list-none flex items-center cursor-pointer bg-gray-100 p-3 rounded-t-lg font-bold text-gray-700 hover:bg-gray-200 transition border border-gray-300">
+                    <span class="mr-2 transform group-open:rotate-90 transition-transform text-xl">👉</span>
+                    <span>Ver diagrama de fuerzas y demostración paso a paso</span>
+                </summary>
+                <div class="details-content p-6 border border-t-0 border-gray-300 rounded-b-lg bg-white shadow-sm">
+                    <div class="flex flex-col md:flex-row gap-8 items-center mb-6">
+                        <div class="w-full md:w-1/2">
+                            <h4 class="font-bold text-blue-800 mb-2 text-center print:text-black">Diagrama de Cuerpo Libre (DCL)</h4>
+                            <canvas id="fbdCanvas" width="350" height="300" class="border border-gray-200 rounded bg-white shadow-sm mx-auto print:border-black"></canvas>
+                            <p class="text-xs text-gray-500 text-center mt-1">Fig 1. Representación vectorial de fuerzas en vuelo.</p>
+                        </div>
+                        <div class="w-full md:w-1/2">
+                            <p><strong>Paso 1: Definición de Fuerzas.</strong><br>
+                            Las fuerzas aerodinámicas actúan en función de la trayectoria (ángulo $\gamma$):
+                            <ul class="list-disc pl-5 text-sm space-y-1 mt-1">
+                                <li><span style="color:#ef4444; font-weight:bold;">Arrastre ($F_d$):</span> Opuesto a la velocidad.</li>
+                                <li><span style="color:#3b82f6; font-weight:bold;">Sustentación ($F_l$):</span> Perpendicular a la velocidad.</li>
+                                <li><strong>Peso ($mg$):</strong> Siempre vertical hacia abajo.</li>
+                            </ul>
+                            </p>
+                            <p class="mt-2"><strong>Paso 2: Descomposición.</strong><br>
+                            Proyectamos los vectores en el plano cartesiano $(x,y)$:
+                            $$ F_{d_x} = -F_d \cos\gamma, \quad F_{d_y} = -F_d \sin\gamma $$
+                            $$ F_{l_x} = -F_l \sin\gamma, \quad F_{l_y} = F_l \cos\gamma $$
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <h3>2.2. Modelado de Viento y Velocidad Relativa</h3>
+            <p>El simulador calcula las fuerzas basándose en la velocidad del disco respecto al fluido, no respecto al suelo. Si el viento tiene velocidad $W_x$:</p>
+            <div class="math-block">
+                $$ \vec{V}_{rel} = (v_x - W_x) \hat{i} + v_y \hat{j} $$
+                $$ v_{rel} = \sqrt{(v_x - W_x)^2 + v_y^2} $$
+            </div>
+
+            <details class="print:hidden group mb-6 mt-4">
+                <summary class="no-print list-none flex items-center cursor-pointer bg-green-50 p-3 rounded-t-lg font-bold text-green-800 hover:bg-green-100 transition border border-green-200">
+                    <span class="mr-2 transform group-open:rotate-90 transition-transform text-xl">👉</span>
+                    <span>Justificación Física: ¿Por qué usamos Velocidad Relativa?</span>
+                </summary>
+                <div class="details-content p-5 border border-t-0 border-green-200 rounded-b-lg bg-white shadow-sm text-sm text-gray-700">
+                    <p class="mb-3">
+                        Las fuerzas aerodinámicas (sustentación y arrastre) no dependen de qué tan rápido se mueve el objeto respecto al suelo, sino de <strong>qué tan rápido choca contra las moléculas del aire</strong>.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <strong class="block text-slate-700 mb-1">El Principio Físico</strong>
+                            <p>
+                                Si el viento sopla a favor del disco, el aire "huye" del disco, reduciendo la velocidad de impacto (menor fuerza). Si sopla en contra, el aire "ataca" al disco, sumando velocidades (mayor fuerza).
+                            </p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded border border-blue-100">
+                            <strong class="block text-blue-700 mb-1">Ejemplo de la Vida Real</strong>
+                            <p>
+                                Es la razón por la que los aviones despegan <em>en contra</em> del viento. El viento en contra aumenta la velocidad relativa sobre las alas, generando más sustentación sin necesidad de ir tan rápido respecto a la pista.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <h3>2.3. Coeficientes Aerodinámicos y Ángulo de Ataque</h3>
+            <p>El ángulo de ataque ($\alpha$) se define como la diferencia entre la actitud del disco ($\theta_{disco}$) y el ángulo de la trayectoria relativa ($\gamma$).</p>
+            <div class="math-block">
+                $$ \alpha = \theta_{disco}(t) - \gamma(t) $$
+                $$ C_d(\alpha) = C_{d_{min}} + k \cdot \alpha^2 $$
+                $$ C_l(\alpha) = C_{l_{max}} \cdot \sin(2\alpha) $$
+            </div>
+
+            <details class="print:hidden group mb-8">
+                <summary class="no-print list-none flex items-center cursor-pointer bg-blue-50 p-4 rounded-t-lg font-bold text-blue-800 hover:bg-blue-100 transition border border-blue-200">
+                    <span class="mr-2 transform group-open:rotate-90 transition-transform text-xl">👉</span>
+                    <span>Profundizar: ¿Por qué usamos estas ecuaciones? (Visualización Interactiva)</span>
+                </summary>
+                <div class="details-content p-6 border border-t-0 border-blue-200 rounded-b-lg bg-white shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-3 text-lg">Comportamiento de los Coeficientes</h4>
+                            <p class="text-sm text-gray-600 mb-4 leading-relaxed">
+                                Los objetos planos como el disco tienen comportamientos aerodinámicos específicos que modelamos matemáticamente. Esta gráfica muestra cómo cambian las fuerzas según el ángulo de ataque ($\alpha$):
+                            </p>
+                            <ul class="space-y-4 text-sm">
+                                <li class="flex items-start p-3 bg-red-50 rounded border border-red-100">
+                                    <span class="text-red-500 font-bold mr-3 text-lg">●</span>
+                                    <div>
+                                        <strong class="text-red-700">Arrastre ($C_d$ - Línea Roja):</strong> 
+                                        Sigue una <em>parábola</em>. Es mínimo cuando el disco corta el aire de filo ($\alpha=0^\circ$) y aumenta drásticamente al inclinarse, actuando como un "freno" aerodinámico mayor.
+                                    </div>
+                                </li>
+                                <li class="flex items-start p-3 bg-blue-50 rounded border border-blue-100">
+                                    <span class="text-blue-500 font-bold mr-3 text-lg">●</span>
+                                    <div>
+                                        <strong class="text-blue-700">Sustentación ($C_l$ - Línea Azul):</strong> 
+                                        Sigue una curva <em>sinusoidal</em>. Aumenta linealmente con el ángulo ayudando al disco a volar, hasta llegar a un punto máximo (pérdida o <em>stall</em>) y luego cae.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="h-72 bg-gray-50 rounded border border-gray-200 p-2 relative">
+                            <canvas id="coeffChart"></canvas>
+                            <p class="text-xs text-center text-gray-400 mt-2">Fig 2. Variación de coeficientes vs Ángulo de Ataque</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- 3. SIMULADOR -->
+        <section id="simulador" class="mb-12">
+            <h2 class="text-3xl font-bold text-blue-900 print:text-black">3. Laboratorio Computacional Interactivo</h2>
+            
+            <!-- GUÍA DE USO -->
+            <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 no-print">
+                <h4 class="font-bold text-yellow-800 mb-2">Guía de Uso Rápida</h4>
+                <ol class="list-decimal list-inside text-sm text-yellow-900 space-y-1">
+                    <li><strong>Configura:</strong> Ajusta la velocidad inicial y el ángulo de lanzamiento en el panel azul.</li>
+                    <li><strong>Ambiente:</strong> Modifica el viento (positivo = a favor) o la densidad del aire en el panel verde.</li>
+                    <li><strong>Lanza:</strong> Presiona el botón azul "Lanzar Disco" para ver la simulación en tiempo real.</li>
+                    <li><strong>Analiza:</strong> Activa la casilla "Mantener trazos" para comparar múltiples lanzamientos superpuestos.</li>
+                </ol>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-6 print:hidden">Utilice el siguiente panel para configurar los parámetros físicos y ambientales de la simulación.</p>
+            
+            <!-- PANEL DE CONTROL (SE OCULTA AL IMPRIMIR) -->
+            <div class="bg-slate-100 p-6 rounded-xl border border-slate-200 shadow-inner mb-6 no-print">
+                <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    Panel de Control Avanzado
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- TARJETAS DE CONTROL -->
+                    <div class="sim-card border-t-blue-500">
+                        <div class="sim-header text-blue-600">Condiciones Iniciales</div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Velocidad Salida ($v_0$)</label>
+                                <div class="flex items-center relative">
+                                    <input type="number" id="initVel" value="25.0" step="0.1" class="w-full border border-gray-300 rounded p-2 pr-8 outline-none focus:ring-2 focus:ring-blue-200">
+                                    <span class="absolute right-3 text-xs text-gray-400">m/s</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Ángulo ($\theta$)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="range" id="launchAngleSlider" min="0" max="90" value="35" class="flex-1 h-2 bg-blue-100 rounded-lg accent-blue-600">
+                                    <input type="number" id="launchAngle" value="35" class="w-14 text-center font-bold text-blue-600 border border-blue-100 bg-blue-50 rounded p-1">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Altura ($h_0$)</label>
+                                <div class="flex items-center relative">
+                                    <input type="number" id="releaseHeight" value="1.8" step="0.1" class="w-full border border-gray-300 rounded p-2 pr-8 outline-none focus:ring-2 focus:ring-blue-200">
+                                    <span class="absolute right-3 text-xs text-gray-400">m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sim-card border-t-green-500">
+                        <div class="sim-header text-green-600">Variables Ambientales</div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Viento ($W_x$)</label>
+                                <div class="flex items-center relative">
+                                    <input type="number" id="windVel" value="0" class="w-full border border-gray-300 rounded p-2 pr-8 outline-none focus:ring-2 focus:ring-green-200">
+                                    <span class="absolute right-3 text-xs text-gray-400">m/s</span>
+                                </div>
+                                <p class="text-[10px] text-right text-gray-400 mt-1">(+) Favor / (-) Contra</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Densidad Aire ($\rho$)</label>
+                                <div class="flex items-center relative">
+                                    <input type="number" id="airDensity" value="1.225" step="0.001" class="w-full border border-gray-300 rounded p-2 pr-12 outline-none focus:ring-2 focus:ring-green-200">
+                                    <span class="absolute right-3 text-xs text-gray-400">kg/m³</span>
+                                </div>
+                            </div>
+                             <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Gravedad ($g$)</label>
+                                <input type="number" id="gravityVal" value="9.81" step="0.01" class="w-full bg-gray-50 border border-gray-300 rounded p-2 text-gray-600">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sim-card border-t-purple-500">
+                        <div class="sim-header text-purple-600">Propiedades del Disco</div>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Masa ($m$)</label>
+                                <input type="number" id="massVal" value="2.0" step="0.1" class="w-full border border-gray-300 rounded p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Diámetro ($D$)</label>
+                                <input type="number" id="diameterVal" value="0.22" step="0.01" class="w-full border border-gray-300 rounded p-2">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Drag ($C_d$)</label>
+                                <input type="number" id="cdVal" value="0.08" step="0.01" class="w-full border border-gray-300 rounded p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Lift ($C_l$)</label>
+                                <input type="number" id="clVal" value="0.7" step="0.1" class="w-full border border-gray-300 rounded p-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONERA -->
+                <div class="flex flex-col md:flex-row justify-between items-center mt-6 pt-4 border-t border-slate-200 gap-4">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="keepTrails" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
+                        <label for="keepTrails" class="text-sm text-gray-700 font-medium">Mantener trazos (Comparar)</label>
+                    </div>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button id="btnExportCsv" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded transition flex items-center gap-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Exportar CSV
+                        </button>
+                        <button id="btnClear" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded transition">Limpiar</button>
+                        <button id="btnLaunch" class="flex-1 md:flex-none px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow-lg transition transform active:scale-95">Lanzar Disco</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANVAS -->
+            <div class="relative mb-8">
+                <div class="flex justify-between items-end mb-2 no-print">
+                    <h4 class="text-lg font-bold text-slate-700">Simulación Visual</h4>
+                    <span id="scaleIndicator" class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded border">Escala: 100%</span>
+                </div>
+                <div class="relative w-full h-[400px] shadow-lg rounded-lg overflow-hidden border border-slate-300 print:shadow-none print:border-black print:h-[300px]">
+                    <canvas id="simCanvas" width="900" height="400" class="w-full h-full"></canvas>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded shadow border border-blue-100 text-sm font-mono z-10 no-print">
+                        <p>Distancia: <span id="dVal" class="font-bold text-blue-600">0.0</span> m</p>
+                        <p>Altura:    <span id="hVal" class="font-bold text-blue-600">0.0</span> m</p>
+                        <p>Tiempo:    <span id="tVal" class="font-bold text-blue-600">0.0</span> s</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRÁFICA OPTIMIZACIÓN -->
+            <div class="flex flex-col md:flex-row gap-6 h-64 print:h-48 print:block">
+                <div class="flex-1 bg-white p-4 rounded border border-gray-200 relative shadow-sm print:shadow-none print:border-black">
+                    <h5 class="absolute top-2 left-4 text-xs font-bold text-gray-400 uppercase">Curva de Optimización</h5>
+                    <canvas id="optimizationChart" class="mt-2"></canvas>
+                </div>
+                <div class="w-full md:w-56 bg-green-50 p-6 rounded border border-green-200 flex flex-col justify-center items-center text-center shadow-sm no-print">
+                    <h5 class="font-bold text-green-800 text-sm mb-2 uppercase tracking-wider">Ángulo Óptimo</h5>
+                    <div class="text-5xl font-extrabold text-green-600 mb-2" id="optAngleDisp">--°</div>
+                    <div class="text-sm text-green-700 font-medium bg-green-100 px-3 py-1 rounded-full" id="optDistDisp">Alcance: -- m</div>
+                </div>
+            </div>
+
+            <!-- JUSTIFICACIÓN OPTIMIZACIÓN -->
+            <details class="print:hidden group mt-6">
+                <summary class="no-print list-none flex items-center cursor-pointer bg-emerald-50 p-3 rounded-t-lg font-bold text-emerald-800 hover:bg-emerald-100 transition border border-emerald-200">
+                    <span class="mr-2 transform group-open:rotate-90 transition-transform text-xl">👉</span>
+                    <span>Análisis: ¿Por qué el ángulo óptimo NO es 45°?</span>
+                </summary>
+                <div class="details-content p-5 border border-t-0 border-emerald-200 rounded-b-lg bg-white shadow-sm text-sm text-gray-700">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="flex-1">
+                            <p class="mb-3">
+                                En física básica (proyectiles en el vacío), el ángulo de 45° maximiza el alcance porque equilibra perfectamente la velocidad horizontal ($v_x$) y el tiempo de vuelo (dependiente de $v_y$).
+                            </p>
+                            <p class="mb-3">
+                                <strong>Pero el disco es un ala.</strong> Genera <em>sustentación</em>.
+                            </p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>
+                                    <strong class="text-emerald-700">Ángulos Bajos (< 45°):</strong> El disco avanza más rápido horizontalmente. La sustentación ayuda a vencer la gravedad, manteniéndolo en el aire sin necesidad de lanzarlo tan hacia arriba.
+                                </li>
+                                <li>
+                                    <strong class="text-red-700">Ángulos Altos (> 45°):</strong> El disco expone mucha superficie al viento ("panzazo"), lo que dispara el <em>arrastre</em> y frena el disco rápidamente.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="w-full md:w-1/3 bg-slate-50 p-4 rounded border border-slate-200 text-center">
+                            <div class="text-4xl mb-2">🥏💨</div>
+                            <p class="font-bold text-slate-700">Conclusión</p>
+                            <p class="text-xs text-slate-500 mt-1">
+                                Es más eficiente "cortar" el aire y dejar que la sustentación haga el trabajo de mantener la altura.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- EXPLICACIÓN ALGORÍTMICA CON DIAGRAMA -->
+                    <div class="mt-6 pt-6 border-t border-emerald-100">
+                        <h4 class="font-bold text-emerald-800 mb-4">Algoritmo de Optimización (Diagrama de Flujo)</h4>
+                        
+                        <!-- DIAGRAMA VISUAL -->
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-2 mb-6 text-xs font-bold text-gray-600">
+                            <div class="bg-white border-2 border-gray-300 p-3 rounded-lg shadow-sm text-center w-full md:w-auto hover:scale-105 transition transform">
+                                <span class="block text-purple-600 mb-1">1. INICIO</span>
+                                Bucle 15° a 60°
+                            </div>
+                            
+                            <svg class="w-6 h-6 text-gray-400 transform rotate-90 md:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            
+                            <div class="bg-white border-2 border-blue-300 p-3 rounded-lg shadow-sm text-center w-full md:w-auto hover:scale-105 transition transform">
+                                <span class="block text-blue-600 mb-1">2. SIMULACIÓN</span>
+                                Calcular Trayectoria<br>(Física RK4)
+                            </div>
+
+                            <svg class="w-6 h-6 text-gray-400 transform rotate-90 md:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+
+                            <div class="bg-white border-2 border-green-300 p-3 rounded-lg shadow-sm text-center w-full md:w-auto hover:scale-105 transition transform">
+                                <span class="block text-green-600 mb-1">3. COMPARAR</span>
+                                ¿Distancia > Máx?
+                            </div>
+
+                            <svg class="w-6 h-6 text-gray-400 transform rotate-90 md:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+
+                            <div class="bg-green-100 border-2 border-green-500 p-3 rounded-lg shadow-sm text-center w-full md:w-auto hover:scale-105 transition transform">
+                                <span class="block text-green-800 mb-1">4. RESULTADO</span>
+                                Guardar Ángulo<br>Óptimo
+                            </div>
+                        </div>
+
+                        <p class="mb-2 text-sm text-gray-700">
+                            El simulador ejecuta este ciclo docenas de veces en una fracción de segundo para construir la "Curva de Optimización" que ves arriba.
+                        </p>
+                    </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- 4. METODOLOGÍA -->
+        <section>
+            <h2 class="text-3xl font-bold">4. Metodología de Integración (RK4)</h2>
+            <p>
+                Dado que las ecuaciones de movimiento dependen de la velocidad al cuadrado y del ángulo de ataque (que cambia con el tiempo), no es posible usar fórmulas simples de cinemática. Para asegurar la precisión y estabilidad numérica, se utiliza el método de <strong>Runge-Kutta de 4to orden (RK4)</strong>.
+            </p>
+            <p>
+                Este método es superior al método de Euler porque "predice" el futuro evaluando la pendiente en cuatro puntos diferentes dentro de un paso de tiempo $\Delta t$ y promediándolos ponderadamente. Esto reduce el error de truncamiento a un orden de $O(h^4)$, lo que significa que es extremadamente preciso incluso para pasos de tiempo razonables.
+            </p>
+            <div class="math-block">
+                $$ y_{i+1} = y_i + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4) $$
+            </div>
+            <p class="text-sm text-gray-600 italic">Donde $k_1$ es la pendiente al inicio, $k_2$ y $k_3$ son estimaciones en el punto medio, y $k_4$ es la estimación al final del intervalo.</p>
+        </section>
+
+        <!-- 5. CONCLUSIONES -->
+        <section>
+            <h2 class="text-3xl font-bold">5. Conclusiones y Análisis de Resultados</h2>
+            <div class="space-y-4 text-lg text-gray-700">
+                <p>
+                    Tras realizar múltiples simulaciones variando los parámetros iniciales, se pueden extraer las siguientes conclusiones fundamentales sobre la dinámica del disco:
+                </p>
+                <ul class="list-disc pl-6 space-y-3">
+                    <li>
+                        <strong>El Ángulo Óptimo no es 45°:</strong> Debido a la fuerza de sustentación ($F_l$), el disco puede mantenerse en el aire más tiempo del que permitiría la gravedad sola. Esto desplaza el ángulo de lanzamiento óptimo hacia valores más bajos, típicamente entre <strong>34° y 38°</strong>. Lanzar a 45° expone al disco a mayor arrastre sin ganar suficiente distancia extra.
+                    </li>
+                    <li>
+                        <strong>Importancia del Viento en Contra:</strong> Contraintuitivamente, un viento moderado en contra puede <em>aumentar</em> la distancia total. Esto ocurre porque aumenta la velocidad relativa ($v_{rel}$), lo que incrementa cuadráticamente la sustentación ($F_l \propto v_{rel}^2$), permitiendo que el disco "flote" por más tiempo.
+                    </li>
+                    <li>
+                        <strong>Sensibilidad a las Condiciones Iniciales:</strong> Pequeñas variaciones en la altura de liberación o en la densidad del aire (altitud geográfica) tienen efectos notables en la trayectoria final, lo que valida la necesidad de modelos numéricos precisos para el entrenamiento deportivo de alto nivel.
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- 6. BIBLIOGRAFÍA -->
+        <section id="bibliografia" class="mt-12 mb-8 pt-8 border-t-2 border-gray-200 bg-slate-50 p-6 rounded-lg">
+             <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">6. Referencias Bibliográficas</h2>
+             <ul class="list-decimal pl-6 text-sm text-gray-700 space-y-3">
+                 <li><strong>Bartlett, R. M. (1992).</strong> <i>The biomechanics of the discus throw: A review</i>. Journal of Sports Sciences, 10(5), 467-510. <span class="italic text-gray-500">(Fuente principal para coeficientes aerodinámicos)</span>.</li>
+                 <li><strong>Chapra, S. C., & Canale, R. P. (2015).</strong> <i>Métodos numéricos para ingenieros</i> (7a ed.). McGraw-Hill Education. <span class="italic text-gray-500">(Fundamento del método RK4)</span>.</li>
+                 <li><strong>Hubbard, M. (1989).</strong> <i>The throwing events in track and field</i>. Biomechanics of Sport, 213-238.</li>
+                 <li><strong>Burden, R. L., & Faires, J. D. (2011).</strong> <i>Análisis numérico</i> (9a ed.). Cengage Learning.</li>
+                 <li><strong>Zill, D. G. (2018).</strong> <i>Ecuaciones diferenciales con aplicaciones de modelado</i>. Cengage Learning.</li>
+             </ul>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 text-center p-6 mt-8 no-print">
+        <p class="mb-2 font-semibold text-white">Juan Manuel Peña Usuga</p>
+        <p class="text-xs">Ingeniería Informática - Politécnico Colombiano Jaime Isaza Cadavid</p>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+/* TIPOGRAFÍA ACADÉMICA MEJORADA */
+body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1f2937; }
+
+/* Bloques de Ecuaciones */
+.math-block { overflow-x: auto; padding: 1.5rem; background: #f8fafc; border-left: 4px solid #3b82f6; border-radius: 0.25rem; margin-bottom: 1.5rem; font-size: 1.05em; page-break-inside: avoid; }
+
+/* Estilos específicos para el simulador */
+.sim-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 1.5rem; height: 100%; border-top-width: 4px; }
+.sim-header { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6; }
+
+canvas#simCanvas { background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 80%, #4CAF50 80%, #388E3C 100%); border-radius: 0.5rem; cursor: crosshair; }
+
+h2 { margin-top: 3rem; margin-bottom: 1.5rem; color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; page-break-after: avoid; }
+h3 { margin-top: 2rem; margin-bottom: 1rem; color: #1d4ed8; font-weight: 600; page-break-after: avoid; }
+p { margin-bottom: 1rem; text-align: justify; line-height: 1.7; color: #334155; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.95em; page-break-inside: avoid; }
+th, td { border: 1px solid #cbd5e1; padding: 0.75rem; text-align: center; }
+th { background-color: #f1f5f9; color: #1e293b; font-weight: 600; }
+tr:nth-child(even) { background-color: #f8fafc; }
+
+/* Desplegables */
+details { margin-bottom: 1.5rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; background-color: #fff; page-break-inside: avoid; }
+summary { background-color: #f1f5f9; padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: #475569; list-style: none; display: flex; align-items: center; }
+summary:hover { background-color: #e2e8f0; color: #1e293b; }
+/* summary::before { content: "👉"; margin-right: 0.5rem; transition: transform 0.2s; } */
+/* details[open] summary::before { transform: rotate(90deg); } */
+.details-content { padding: 1.5rem; background-color: white; border-top: 1px solid #e2e8f0; font-size: 0.95em; color: #4b5563; }
+
+input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* =========================================
+   ESTILOS DE IMPRESIÓN (Modo Paper)
+   ========================================= */
+@media print {
+    body { font-size: 12pt; color: black; background: white; }
+    header { background: white !important; color: black !important; border-bottom: 2px solid black !important; padding: 0 !important; margin-bottom: 2cm; box-shadow: none !important; }
+    header h1 { font-size: 20pt !important; color: black !important; text-align: center !important; }
+    header p { color: #444 !important; }
+    
+    /* Ocultar elementos interactivos */
+    .no-print, button, input, select, label, .sim-card, #scaleIndicator { display: none !important; }
+    
+    /* Mostrar solo la gráfica final */
+    #simCanvas { border: 1px solid #ccc; break-inside: avoid; }
+    #optimizationChart { height: 300px !important; width: 100% !important; }
+    
+    /* Ajustes de layout */
+    .grid { display: block !important; }
+    main { box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+    
+    /* Expandir detalles para que se lea todo */
+    details { display: block !important; border: none; }
+    details[open] summary { display: none; }
+    details:not([open]) { display: none; }
+    .details-content { padding: 0; border: none; }
+
+    /* Forzar fondo blanco en gráficas */
+    canvas { background: white !important; }
+}
