@@ -1,9 +1,9 @@
-import { canvas, BASE_SCALE, currentScale, setCurrentScale, resetScale, trails, pushTrail } from './constants.js';
+import { canvas, BASE_SCALE, currentScale, setCurrentScale, resetScale, trails, pushTrail, getCurrentScenario } from './constants.js';
 import { drawScene, drawPath, drawDiscSprite, drawFBD, drawShadow } from './draw.js';
 import { calculateTrajectory } from './physics.js';
 import { runOptimization } from './optimization.js';
 import { initCoeffChart } from './explanation.js';
-import { getParamsFromUI, initAngleControls } from './ui.js';
+import { getParamsFromUI, initAngleControls, initScenarioSelector } from './ui.js';
 
 let animationId = null;
 let lastSimulationData = [];
@@ -46,7 +46,7 @@ function startAnimation() {
     if (keepTrails) {
       trails.forEach((tr) => drawPath(tr, 'rgba(100,100,100,0.3)', 1));
     }
-    
+
     // Dibujar sombra antes del disco y la trayectoria principal
     drawShadow(pt);
 
@@ -81,14 +81,22 @@ function clearCanvas() {
 
 function downloadCSV() {
   if (!lastSimulationData.length) { alert('Primero ejecuta una simulación.'); return; }
-  let csvContent = 'data:text/csv;charset=utf-8,Tiempo(s),Distancia(m),Altura(m),Vx(m/s),Vy(m/s)\n';
+  const params = getParamsFromUI();
+  const scenario = getCurrentScenario();
+
+  let csvContent = 'data:text/csv;charset=utf-8,';
+  csvContent += `# Escenario: ${scenario.name}\n`;
+  csvContent += `# Viento: ${params.wind} m/s\n`;
+  csvContent += `# Densidad del aire: ${params.rho} kg/m³\n`;
+  csvContent += 'Tiempo(s),Distancia(m),Altura(m),Vx(m/s),Vy(m/s)\n';
+
   lastSimulationData.forEach((row) => {
     csvContent += `${row.t.toFixed(3)},${row.x.toFixed(3)},${row.y.toFixed(3)},${row.vx.toFixed(3)},${row.vy.toFixed(3)}\n`;
   });
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'datos_lanzamiento.csv');
+  link.setAttribute('download', `disco_${scenario.shortName.toLowerCase().replace(' ', '_')}_datos.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -96,6 +104,7 @@ function downloadCSV() {
 
 window.addEventListener('DOMContentLoaded', () => {
   initAngleControls();
+  initScenarioSelector(); // Inicializar selector de escenarios
   drawScene();
   updateScaleIndicator();
   // pequeño delay para asegurar tamaño canvas en algunos navegadores

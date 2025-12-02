@@ -10,6 +10,75 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1f2937; }
 
 canvas#simCanvas { background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 80%, #4CAF50 80%, #388E3C 100%); border-radius: 0.5rem; cursor: crosshair; }
 
+/* Estilos para selector de escenarios */
+.scenario-card {
+    display: block;
+    background: white;
+    border: 3px solid;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+.scenario-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.scenario-card input[type="radio"]:checked + .scenario-content {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.scenario-card input[type="radio"]:checked ~ .scenario-content,
+.scenario-card:has(input[type="radio"]:checked) {
+    border-color: currentColor;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.scenario-content {
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.scenario-badge {
+    display: inline-block;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.scenario-check {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.scenario-card input[type="radio"]:checked + .scenario-content .scenario-check {
+    opacity: 1;
+}
+
+.scenario-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.scenario-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.scenario-params {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: #475569;
+}
+
 h2 { margin-top: 3rem; margin-bottom: 1.5rem; color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; page-break-after: avoid; }
 h3 { margin-top: 2rem; margin-bottom: 1rem; color: #1d4ed8; font-weight: 600; page-break-after: avoid; }
 p { margin-bottom: 1rem; text-align: justify; line-height: 1.7; color: #334155; }

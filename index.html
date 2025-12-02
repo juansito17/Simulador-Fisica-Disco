@@ -253,6 +253,130 @@
                 </ol>
             </div>
 
+            <!-- SELECTOR DE ESCENARIOS -->
+            <!-- INSTRUCCIÓN: Insertar este código en index.html en la línea 257, justo ANTES de: <p class="text-sm text-gray-600 mb-6 print:hidden"> -->
+            <div
+                class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200 shadow-md mb-6 no-print">
+                <h3 class="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    Selección de Escenario de Simulación
+                </h3>
+                <p class="text-sm text-blue-800 mb-4">
+                    Seleccione uno de los cuatro escenarios físicos planteados. Los controles de viento y rozamiento se
+                    ajustarán automáticamente según el escenario elegido.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Escenario 1 -->
+                    <label class="scenario-card cursor-pointer" style="border-color: #10b981;">
+                        <input type="radio" name="scenario" value="1" class="hidden">
+                        <div class="scenario-content">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="scenario-badge" style="background-color: #10b981;">Escenario 1</span>
+                                <span class="scenario-check">
+                                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <p class="scenario-title">Sin Viento, Sin Rozamiento</p>
+                            <p class="scenario-desc">Movimiento ideal en el vacío. Solo actúa la gravedad.</p>
+                            <div class="scenario-params">
+                                <span>🌬️ Viento: 0 m/s (bloqueado)</span>
+                                <span>💨 Densidad: 0 kg/m³ (bloqueado)</span>
+                            </div>
+                        </div>
+                    </label>
+                    <!-- Escenario 2 -->
+                    <label class="scenario-card cursor-pointer" style="border-color: #3b82f6;">
+                        <input type="radio" name="scenario" value="2" class="hidden">
+                        <div class="scenario-content">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="scenario-badge" style="background-color: #3b82f6;">Escenario 2</span>
+                                <span class="scenario-check">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <p class="scenario-title">Sin Viento, Con Rozamiento</p>
+                            <p class="scenario-desc">Efecto del arrastre aerodinámico sin viento.</p>
+                            <div class="scenario-params">
+                                <span>🌬️ Viento: 0 m/s (bloqueado)</span>
+                                <span>💨 Densidad: 1.225 kg/m³ (ajustable)</span>
+                            </div>
+                        </div>
+                    </label>
+                    <!-- Escenario 3 -->
+                    <label class="scenario-card cursor-pointer" style="border-color: #f59e0b;">
+                        <input type="radio" name="scenario" value="3" class="hidden">
+                        <div class="scenario-content">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="scenario-badge" style="background-color: #f59e0b;">Escenario 3</span>
+                                <span class="scenario-check">
+                                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <p class="scenario-title">Con Viento, Sin Rozamiento</p>
+                            <p class="scenario-desc">Efecto del viento en el vacío (sin aire).</p>
+                            <div class="scenario-params">
+                                <span>🌬️ Viento: Configurable</span>
+                                <span>💨 Densidad: 0 kg/m³ (bloqueado)</span>
+                            </div>
+                        </div>
+                    </label>
+                    <!-- Escenario 4 -->
+                    <label class="scenario-card cursor-pointer" style="border-color: #ef4444;">
+                        <input type="radio" name="scenario" value="4" class="hidden" checked>
+                        <div class="scenario-content">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="scenario-badge" style="background-color: #ef4444;">Escenario 4</span>
+                                <span class="scenario-check">
+                                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <p class="scenario-title">Con Viento, Con Rozamiento</p>
+                            <p class="scenario-desc">Simulación completa con todas las fuerzas.</p>
+                            <div class="scenario-params">
+                                <span>🌬️ Viento: Configurable</span>
+                                <span>💨 Densidad: 1.225 kg/m³ (ajustable)</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-6 print:hidden">Utilice el siguiente panel para configurar los parámetros
+                físicos y ambientales de la simulación.</p>
+
+            <!-- PANEL DE CONTROL (SE OCULTA AL IMPRIMIR) -->
+            <div class="bg-slate-100 p-6 rounded-xl border border-slate-200 shadow-inner mb-6 no-print">
+                <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        panel verde.</li>
+                        <li><strong>Lanza:</strong> Presiona el botón azul "Lanzar Disco" para ver la simulación en
+                            tiempo
+                            real.</li>
+                        <li><strong>Analiza:</strong> Activa la casilla "Mantener trazos" para comparar múltiples
+                            lanzamientos superpuestos.</li>
+                        </ol>
+            </div>
+
             <p class="text-sm text-gray-600 mb-6 print:hidden">Utilice el siguiente panel para configurar los parámetros
                 físicos y ambientales de la simulación.</p>
 
@@ -282,7 +406,8 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1">Ángulo ($\theta$)</label>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Ángulo
+                                    ($\theta$)</label>
                                 <div class="flex items-center gap-2">
                                     <input type="range" id="launchAngleSlider" min="0" max="90" value="35"
                                         class="flex-1 h-2 bg-blue-100 rounded-lg accent-blue-600">
@@ -314,7 +439,8 @@
                                 <p class="text-[10px] text-right text-gray-400 mt-1">(+) Favor / (-) Contra</p>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1">Densidad Aire ($\rho$)</label>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Densidad Aire
+                                    ($\rho$)</label>
                                 <div class="flex items-center relative">
                                     <input type="number" id="airDensity" value="1.225" step="0.001"
                                         class="w-full border border-gray-300 rounded p-2 pr-12 outline-none focus:ring-2 focus:ring-green-200">
@@ -345,12 +471,14 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Drag ($C_d$)</label>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Drag
+                                    ($C_d$)</label>
                                 <input type="number" id="cdVal" value="0.08" step="0.01"
                                     class="w-full border border-gray-300 rounded p-2">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Lift ($C_l$)</label>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Coef. Lift
+                                    ($C_l$)</label>
                                 <input type="number" id="clVal" value="0.7" step="0.1"
                                     class="w-full border border-gray-300 rounded p-2">
                             </div>

@@ -1,4 +1,4 @@
-import { canvas, ctx, START_X, GROUND_Y, BASE_SCALE, currentScale } from './constants.js';
+import { canvas, ctx, START_X, GROUND_Y, BASE_SCALE, currentScale, getCurrentScenario } from './constants.js';
 
 export function drawArrow(ctx2d, x1, y1, x2, y2, color, label) {
   ctx2d.strokeStyle = color; ctx2d.fillStyle = color; ctx2d.lineWidth = 3;
@@ -37,6 +37,46 @@ export function drawFBD() {
   cx.restore();
 }
 
+export function drawScenarioBadge() {
+  const scenario = getCurrentScenario();
+  if (!scenario) return;
+
+  const padding = 10;
+  const x = 10;
+  const y = 10;
+
+  ctx.save();
+
+  // Fondo del badge
+  ctx.fillStyle = scenario.color;
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetX = 2;
+  ctx.shadowOffsetY = 2;
+  ctx.fillRect(x, y, 220, 35);
+
+  // Borde
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, 220, 35);
+
+  // Resetear sombra
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  // Texto
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 11px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(scenario.shortName.toUpperCase(), x + padding, y + 14);
+
+  ctx.font = '10px Arial';
+  ctx.fillText(scenario.name, x + padding, y + 28);
+
+  ctx.restore();
+}
+
 export function drawScene() {
   // Cielo con gradiente
   const gradient = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
@@ -46,13 +86,13 @@ export function drawScene() {
   ctx.fillRect(0, 0, canvas.width, GROUND_Y);
 
   // Suelo
-  ctx.fillStyle = '#2d6a4f'; 
+  ctx.fillStyle = '#2d6a4f';
   ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
 
   // Patrón de césped simple (opcional, para textura)
   ctx.fillStyle = 'rgba(0,0,0,0.05)';
   for (let i = 0; i < canvas.width; i += 20) {
-      if ((i / 20) % 2 === 0) ctx.fillRect(i, GROUND_Y, 20, canvas.height - GROUND_Y);
+    if ((i / 20) % 2 === 0) ctx.fillRect(i, GROUND_Y, 20, canvas.height - GROUND_Y);
   }
 
   ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.font = '10px Arial'; ctx.textAlign = 'center';
@@ -72,7 +112,7 @@ export function drawScene() {
       // Marcas de distancia (Línea)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       ctx.fillRect(px, GROUND_Y, 2, 8);
-      
+
       // Texto (Blanco con sombra suave para legibilidad)
       ctx.fillStyle = '#ffffff';
       ctx.shadowColor = 'rgba(0,0,0,0.5)';
@@ -84,23 +124,26 @@ export function drawScene() {
 
   // Jugador (Lanzador)
   const hPlayer = Math.max(2, 1.8 * currentScale);
-  ctx.fillStyle = '#1e293b'; 
+  ctx.fillStyle = '#1e293b';
   ctx.fillRect(START_X - 3, GROUND_Y - hPlayer, 6, hPlayer);
-  
+
   // Cabeza del jugador
   ctx.beginPath();
   ctx.arc(START_X, GROUND_Y - hPlayer - 2, 2, 0, Math.PI * 2);
   ctx.fill();
+
+  // Dibujar badge del escenario
+  drawScenarioBadge();
 }
 
 export function drawShadow(pt) {
   if (pt.y < 0) return; // No sombra si está bajo tierra (aunque la simulación para en 0)
-  
+
   const px = START_X + pt.x * currentScale;
   const py = GROUND_Y; // La sombra siempre está en el suelo
-  
+
   // La sombra se hace más pequeña y difusa cuanto más alto está el disco
-  const shadowScale = Math.max(0.2, 1 - pt.y / 20); 
+  const shadowScale = Math.max(0.2, 1 - pt.y / 20);
   const rw = Math.max(4, (10 * currentScale) / BASE_SCALE) * shadowScale;
   const rh = Math.max(1, (3 * currentScale) / BASE_SCALE) * shadowScale * 0.5; // Más aplastada
 
@@ -115,15 +158,15 @@ export function drawShadow(pt) {
 
 export function drawPath(pts, color, width) {
   if (pts.length < 2) return;
-  ctx.beginPath(); 
-  ctx.strokeStyle = color; 
+  ctx.beginPath();
+  ctx.strokeStyle = color;
   ctx.lineWidth = width;
   ctx.lineJoin = 'round'; // Suavizar uniones
   ctx.lineCap = 'round';
 
   // Dibujar solo los puntos visibles para optimizar si hay muchos
   // (Opcional, pero bueno para rendimiento)
-  
+
   ctx.moveTo(START_X + pts[0].x * currentScale, GROUND_Y - pts[0].y * currentScale);
   for (let i = 1; i < pts.length; i++) {
     const px = START_X + pts[i].x * currentScale;
@@ -136,10 +179,10 @@ export function drawPath(pts, color, width) {
 export function drawDiscSprite(pt) {
   const px = START_X + pt.x * currentScale;
   const py = GROUND_Y - pt.y * currentScale;
-  
-  ctx.save(); 
+
+  ctx.save();
   ctx.translate(px, py);
-  
+
   // Rotación física del disco (ángulo de ataque + trayectoria)
   // Nota: pt.vx y pt.vy dan la dirección de la velocidad. 
   // El disco tiene su propia actitud. En la simulación simplificada, 
@@ -158,12 +201,12 @@ export function drawDiscSprite(pt) {
   grad.addColorStop(0, '#fcd34d'); // Amarillo claro arriba
   grad.addColorStop(0.5, '#f59e0b'); // Naranja en medio
   grad.addColorStop(1, '#b45309'); // Marrón abajo
-  
+
   ctx.fillStyle = grad;
   ctx.beginPath();
   ctx.ellipse(0, 0, rw, rh, 0, 0, Math.PI * 2);
   ctx.fill();
-  
+
   // Borde metálico
   ctx.strokeStyle = '#78350f';
   ctx.lineWidth = 1;
