@@ -8,6 +8,15 @@ Este proyecto implementa una solución completa para visualizar y analizar las f
 
 ## ✨ Características Principales
 
+- **🎯 Sistema de Cuatro Escenarios**:
+  - **Escenario 1**: Sin Viento, Sin Rozamiento (movimiento ideal)
+  - **Escenario 2**: Sin Viento, Con Rozamiento (efecto aerodinámico puro)
+  - **Escenario 3**: Con Viento, Sin Rozamiento (efecto del viento en vacío)
+  - **Escenario 4**: Con Viento, Con Rozamiento (simulación completa)
+  - Selector visual interactivo con código de colores
+  - Bloqueo automático de controles según el escenario
+  - Indicador visual del escenario activo en el canvas
+
 - **Simulación en Tiempo Real**: Visualización animada de la trayectoria del disco con parámetros configurables
 - **Método Runge-Kutta (RK4)**: Integración numérica de 4to orden para alta precisión
 - **Modelo Aerodinámico Completo**: 
@@ -19,13 +28,54 @@ Este proyecto implementa una solución completa para visualizar y analizar las f
   - Diagrama de cuerpo libre (DCL)
   - Gráficas de coeficientes aerodinámicos
   - Curvas de optimización
-- **Exportación de Datos**: Descarga de resultados en formato CSV
+  - Badge de escenario en tiempo real
+- **Exportación de Datos Mejorada**: Descarga de resultados en CSV con metadatos del escenario
 - **Diseño Responsivo**: Interfaz adaptable a diferentes dispositivos
 - **Soporte de Impresión**: Maquetación optimizada para generar informes
 
 ## 🚀 Demo
 
 Abre `index.html` directamente en tu navegador moderno (Chrome, Firefox, Edge, Safari).
+
+## 🎮 Escenarios de Simulación
+
+El simulador implementa **cuatro escenarios físicos distintos** según las condiciones del profesor Cienfuegos:
+
+### 📗 Escenario 1: Sin Viento, Sin Rozamiento
+- **Color**: Verde (#10b981)
+- **Condiciones**: Vacío ideal, solo actúa la gravedad
+- **Valores**: Viento = 0 m/s, Densidad = 0 kg/m³
+- **Controles**: Ambos parámetros bloqueados
+- **Aplicación**: Estudio de movimiento parabólico ideal
+
+### 📘 Escenario 2: Sin Viento, Con Rozamiento
+- **Color**: Azul (#3b82f6)
+- **Condiciones**: Efecto del arrastre aerodinámico sin viento
+- **Valores**: Viento = 0 m/s, Densidad = 1.225 kg/m³ (ajustable)
+- **Controles**: Viento bloqueado, densidad configurable
+- **Aplicación**: Análisis de fuerzas aerodinámicas puras
+
+### 📙 Escenario 3: Con Viento, Sin Rozamiento
+- **Color**: Amarillo (#f59e0b)
+- **Condiciones**: Efecto del viento en el vacío
+- **Valores**: Viento configurable, Densidad = 0 kg/m³
+- **Controles**: Viento ajustable, densidad bloqueada
+- **Aplicación**: Estudio del efecto del viento sin resistencia
+
+### 📕 Escenario 4: Con Viento, Con Rozamiento
+- **Color**: Rojo (#ef4444)
+- **Condiciones**: Simulación completa con todas las fuerzas
+- **Valores**: Viento configurable, Densidad = 1.225 kg/m³ (ajustable)
+- **Controles**: Ambos parámetros configurables
+- **Aplicación**: Modelo realista completo
+
+### 💡 Características del Sistema de Escenarios
+
+- **Selector Visual**: Interfaz intuitiva con tarjetas de colores
+- **Control Automático**: Los inputs se habilitan/deshabilitan automáticamente
+- **Badge en Canvas**: Indicador visual del escenario activo durante la simulación
+- **Exportación Enriquecida**: Los archivos CSV incluyen metadatos del escenario
+- **Comparación Fácil**: Usa "Mantener trazos" para comparar escenarios superpuestos
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -59,30 +109,35 @@ DiscoSimulacion/
 
 ## 🎯 Uso
 
-### Parámetros Configurables
+### 1. Seleccionar Escenario
 
-1. **Condiciones Iniciales**:
-   - Velocidad inicial (v₀)
-   - Ángulo de lanzamiento (θ)
-   - Altura de liberación (h₀)
+Haz clic en una de las cuatro tarjetas de escenarios para seleccionar las condiciones de simulación. Los controles de viento y rozamiento se ajustarán automáticamente.
 
-2. **Variables Ambientales**:
-   - Velocidad del viento (Wₓ)
-   - Densidad del aire (ρ)
-   - Gravedad (g)
+### 2. Parámetros Configurables
 
-3. **Propiedades del Disco**:
-   - Masa (m)
-   - Diámetro (D)
-   - Coeficiente de arrastre (Cd)
-   - Coeficiente de sustentación (Cl)
+**Condiciones Iniciales**:
+- Velocidad inicial (v₀)
+- Ángulo de lanzamiento (θ)
+- Altura de liberación (h₀)
 
-### Controles
+**Variables Ambientales** *(según escenario)*:
+- Velocidad del viento (Wₓ)
+- Densidad del aire (ρ)
+- Gravedad (g)
 
+**Propiedades del Disco**:
+- Masa (m)
+- Diámetro (D)
+- Coeficiente de arrastre (Cd)
+- Coeficiente de sustentación (Cl)
+
+### 3. Controles
+
+- **Selector de Escenarios**: Elige entre los 4 escenarios físicos
 - **Lanzar Disco**: Ejecuta la simulación con los parámetros actuales
 - **Mantener trazos**: Superpone múltiples trayectorias para comparación
 - **Limpiar**: Reinicia el canvas
-- **Exportar CSV**: Descarga los datos de la simulación
+- **Exportar CSV**: Descarga los datos con metadatos del escenario
 
 ## 📊 Fundamento Matemático
 
